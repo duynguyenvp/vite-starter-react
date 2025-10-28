@@ -16,7 +16,7 @@ describe('Counter', () => {
   it('increments count when + button is clicked', () => {
     render(<Counter />);
     const incrementButton = screen.getByTestId('increment-button');
-    
+
     fireEvent.click(incrementButton);
     expect(screen.getByTestId('count-value').textContent).toBe('1');
   });
@@ -24,7 +24,7 @@ describe('Counter', () => {
   it('decrements count when - button is clicked', () => {
     render(<Counter />);
     const decrementButton = screen.getByTestId('decrement-button');
-    
+
     fireEvent.click(decrementButton);
     expect(screen.getByTestId('count-value').textContent).toBe('-1');
   });

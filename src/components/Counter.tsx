@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 interface CounterProps {
   initialValue?: number;
@@ -20,10 +20,7 @@ const Counter = ({ initialValue = 0 }: CounterProps) => {
       >
         -
       </button>
-      <span
-        data-testid="count-value"
-        className="text-2xl font-semibold min-w-8 text-center"
-      >
+      <span data-testid="count-value" className="text-2xl font-semibold min-w-8 text-center">
         {count}
       </span>
       <button

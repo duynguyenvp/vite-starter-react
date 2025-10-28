@@ -1,4 +1,4 @@
-import Counter from "@/components/Counter";
+import Counter from '@/components/Counter';
 
 const Page3 = () => {
   return <Counter initialValue={10} />;

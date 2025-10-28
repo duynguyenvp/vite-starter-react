@@ -1,4 +1,4 @@
-import Hello from "../components/Hello";
+import Hello from '../components/Hello';
 
 const Page2 = () => {
   return (

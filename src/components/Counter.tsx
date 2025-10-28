@@ -16,7 +16,7 @@ const Counter = ({ initialValue = 0 }: CounterProps) => {
         data-testid="decrement-button"
         onClick={decrement}
         aria-label="Decrease count"
-        className="px-4 py-2 text-xl text-white font-medium rounded-lg border border-gray-300 hover:bg-gray-100 active:bg-gray-200 transition-colors"
+        className="px-4 py-2 text-xl font-medium rounded-lg border border-gray-300 hover:bg-gray-100 active:bg-gray-200 transition-colors"
       >
         -
       </button>
@@ -30,7 +30,7 @@ const Counter = ({ initialValue = 0 }: CounterProps) => {
         data-testid="increment-button"
         onClick={increment}
         aria-label="Increase count"
-        className="px-4 py-2 text-xl text-white font-medium rounded-lg border border-gray-300 hover:bg-gray-100 active:bg-gray-200 transition-colors"
+        className="px-4 py-2 text-xl font-medium rounded-lg border border-gray-300 hover:bg-gray-100 active:bg-gray-200 transition-colors"
       >
         +
       </button>

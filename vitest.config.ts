@@ -12,8 +12,16 @@ export default defineConfig({
     setupFiles: "./src/setup.ts",
     include: ["src/**/*.{test,spec}.{js,ts,jsx,tsx}"],
     coverage: {
+      enabled: true,
+      include: ["src/components/**"],
       provider: "v8",
       reporter: ["text", "html"],
+      thresholds: {
+        statements: 80,
+        branches: 70,
+        functions: 80,
+        lines: 80,
+      },
     },
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),

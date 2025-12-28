@@ -14,8 +14,8 @@ describe('Page3 - Decimal Validation Form', () => {
     { name: 'isZero', valid: '0', invalid: '1', error: 'Giá trị phải = 0' },
     {
       name: 'maxDecimalPlaces',
-      valid: '1.23',
-      invalid: '1.234',
+      valid: '1,23',
+      invalid: '1,234',
       error: 'Tối đa 2 chữ số thập phân',
     },
     { name: 'min', valid: '10', invalid: '9', error: 'Giá trị phải >= 10' },
@@ -29,14 +29,17 @@ describe('Page3 - Decimal Validation Form', () => {
     cy.visit(`${url}/page3`);
     fields.forEach(({ name, invalid, error, valid }) => {
       // Input invalid value and blur
-      cy.get(`input[name="${name}"]`).clear().realType(invalid);
+      cy.get(`input[name="${name}"]`).clear().type(invalid, { delay: 100 });
       cy.get('body').click({ force: true }); // blur
+      cy.wait(100); // wait for validation
       if (error) {
         cy.contains(error).should('be.visible');
       }
       // Input valid value and blur
-      cy.get(`input[name="${name}"]`).clear().realType(valid);
+      cy.get(`input[name="${name}"]`).clear();
+      valid && cy.get(`input[name="${name}"]`).type(valid, { delay: 100 });
       cy.get('body').click({ force: true }); // blur
+      cy.wait(100); // wait for validation
       if (error) {
         cy.contains(error).should('not.exist');
       }

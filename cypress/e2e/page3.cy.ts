@@ -1,28 +1,67 @@
-describe('Page3 - Counter', () => {
-  // Note: make sure your dev server is running (vite) at http://localhost:5173
-  // either set Cypress baseUrl in cypress config or use the full URL below.
+import 'cypress-real-events';
 
+describe('Page3 - Decimal Validation Form', () => {
   const url = Cypress.config('baseUrl') ?? 'http://localhost:5173';
 
-  it('shows initial value and increments/decrements', () => {
+  const fields = [
+    { name: 'greaterThanOrEqual', valid: '100', invalid: '99', error: 'Giá trị phải >= 100' },
+    { name: 'greaterThan', valid: '1', invalid: '0', error: 'Giá trị phải > 0' },
+    { name: 'lessThanOrEqual', valid: '1000', invalid: '1001', error: 'Giá trị phải <= 1000' },
+    { name: 'lessThan', valid: '499', invalid: '500', error: 'Giá trị phải < 500' },
+    { name: 'equals', valid: '50', invalid: '49', error: 'Giá trị phải = 50' },
+    { name: 'isPositive', valid: '1', invalid: '-1', error: 'Giá trị phải là số dương' },
+    { name: 'isNegative', valid: '-1', invalid: '1', error: 'Giá trị phải là số âm' },
+    { name: 'isZero', valid: '0', invalid: '1', error: 'Giá trị phải = 0' },
+    {
+      name: 'maxDecimalPlaces',
+      valid: '1.23',
+      invalid: '1.234',
+      error: 'Tối đa 2 chữ số thập phân',
+    },
+    { name: 'min', valid: '10', invalid: '9', error: 'Giá trị phải >= 10' },
+    { name: 'max', valid: '100', invalid: '101', error: 'Giá trị phải <= 100' },
+    { name: 'range', valid: '50', invalid: '0', error: 'Giá trị phải trong khoảng 1-100' },
+    { name: 'combined', valid: '100', invalid: '9', error: 'Giá trị phải >= 10' },
+    { name: 'optional', valid: '', invalid: '-1', error: 'Nếu nhập thì phải >= 0' },
+  ];
+
+  it('validates all fields in a user flow', () => {
     cy.visit(`${url}/page3`);
-
-    // assert initial value (Page3 renders Counter with initialValue={10})
-    cy.get('[data-testid="count-value"]').should('have.text', '10');
-
-    // increment
-    cy.get('[data-testid="increment-button"]').click();
-    cy.get('[data-testid="count-value"]').should('have.text', '11');
-
-    // decrement twice
-    cy.get('[data-testid="decrement-button"]').click();
-    cy.get('[data-testid="decrement-button"]').click();
-    cy.get('[data-testid="count-value"]').should('have.text', '9');
+    fields.forEach(({ name, invalid, error, valid }) => {
+      // Input invalid value and blur
+      cy.get(`input[name="${name}"]`).clear().realType(invalid);
+      cy.get('body').click({ force: true }); // blur
+      if (error) {
+        cy.contains(error).should('be.visible');
+      }
+      // Input valid value and blur
+      cy.get(`input[name="${name}"]`).clear().realType(valid);
+      cy.get('body').click({ force: true }); // blur
+      if (error) {
+        cy.contains(error).should('not.exist');
+      }
+    });
   });
 
-  it('buttons are accessible and visible', () => {
+  it('submits valid form', () => {
     cy.visit(`${url}/page3`);
-    cy.get('[data-testid="increment-button"]').should('be.visible').and('have.attr', 'aria-label', 'Increase count');
-    cy.get('[data-testid="decrement-button"]').should('be.visible').and('have.attr', 'aria-label', 'Decrease count');
+    fields.forEach(({ name, valid }) => {
+      cy.get(`input[name="${name}"]`).clear().realType(valid);
+    });
+    cy.contains('Submit').realClick();
+    cy.on('window:alert', (txt) => {
+      expect(txt).to.contain('Form submitted successfully');
+    });
+  });
+
+  it('reset button clears all fields', () => {
+    cy.visit(`${url}/page3`);
+    fields.forEach(({ name, valid }) => {
+      cy.get(`input[name="${name}"]`).clear().realType(valid);
+    });
+    cy.contains('Reset').realClick();
+    fields.forEach(({ name }) => {
+      cy.get(`input[name="${name}"]`).should('have.value', '');
+    });
   });
 });

@@ -76,7 +76,6 @@ const Page3 = () => {
     handleSubmit,
     formState: { errors },
     reset,
-    trigger,
   } = useForm<FormValues>({
     resolver: zodResolver(DecimalValidationSchema),
     mode: 'onChange', // Validate khi người dùng nhập
@@ -107,7 +106,7 @@ const Page3 = () => {
   const renderField = (
     name: keyof FormValues,
     label: string,
-    description: string,
+    description: string = '',
     decimalScale?: number,
   ) => (
     <div key={name} style={{ marginBottom: '20px' }}>
@@ -125,15 +124,6 @@ const Page3 = () => {
             onChange={(val) => {
               console.log(`[Page3] Field ${name} changed to:`, val);
               field.onChange(val);
-              // Trigger validation sau khi onChange
-              setTimeout(() => {
-                trigger(name).then((isValid) => {
-                  console.log(`[Page3] Field ${name} validation result:`, isValid);
-                  if (!isValid) {
-                    console.log(`[Page3] Field ${name} errors:`, errors[name]);
-                  }
-                });
-              }, 0);
             }}
             name={field.name}
             decimalScale={decimalScale}
@@ -158,52 +148,33 @@ const Page3 = () => {
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <div style={{ display: 'grid', gap: '20px' }}>
-          {renderField(
-            'greaterThanOrEqual',
-            'Greater Than Or Equal (>= 100)',
-            'Giá trị phải >= 100',
-          )}
+          {renderField('greaterThanOrEqual', 'Greater Than Or Equal (>= 100)')}
 
-          {renderField('greaterThan', 'Greater Than (> 0)', 'Giá trị phải > 0')}
+          {renderField('greaterThan', 'Greater Than (> 0)')}
 
-          {renderField('lessThanOrEqual', 'Less Than Or Equal (<= 1000)', 'Giá trị phải <= 1000')}
+          {renderField('lessThanOrEqual', 'Less Than Or Equal (<= 1000)')}
 
-          {renderField('lessThan', 'Less Than (< 500)', 'Giá trị phải < 500')}
+          {renderField('lessThan', 'Less Than (< 500)')}
 
-          {renderField('equals', 'Equals (= 50)', 'Giá trị phải = 50')}
+          {renderField('equals', 'Equals (= 50)')}
 
-          {renderField('isPositive', 'Is Positive (> 0)', 'Giá trị phải là số dương')}
+          {renderField('isPositive', 'Is Positive (> 0)')}
 
-          {renderField('isNegative', 'Is Negative (< 0)', 'Giá trị phải là số âm')}
+          {renderField('isNegative', 'Is Negative (< 0)')}
 
-          {renderField('isZero', 'Is Zero (= 0)', 'Giá trị phải = 0')}
+          {renderField('isZero', 'Is Zero (= 0)')}
 
-          {renderField(
-            'maxDecimalPlaces',
-            'Max Decimal Places (<= 2)',
-            'Tối đa 2 chữ số thập phân',
-            2,
-          )}
+          {renderField('maxDecimalPlaces', 'Max Decimal Places (<= 2)', '', 3)}
 
-          {renderField('min', 'Min (>= 10)', 'Giá trị phải >= 10 (alias của greaterThanOrEqual)')}
+          {renderField('min', 'Min (>= 10)')}
 
-          {renderField('max', 'Max (<= 100)', 'Giá trị phải <= 100 (alias của lessThanOrEqual)')}
+          {renderField('max', 'Max (<= 100)')}
 
-          {renderField('range', 'Range (1-100)', 'Giá trị phải trong khoảng 1-100')}
+          {renderField('range', 'Range (1-100)')}
 
-          {renderField(
-            'combined',
-            'Combined Validations',
-            '>= 10, <= 1000, max 3 decimal places',
-            3,
-          )}
+          {renderField('combined', 'Combined Validations', '', 3)}
 
-          {renderField(
-            'optional',
-            'Optional Field',
-            'Cho phép empty, nếu nhập thì >= 0 và max 2 decimal places',
-            2,
-          )}
+          {renderField('optional', 'Optional Field', '', 2)}
         </div>
 
         <div style={{ marginTop: '24px', display: 'flex', gap: '12px' }}>

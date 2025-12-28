@@ -326,11 +326,10 @@ function addDecimalMethods(schema: z.ZodString): DecimalSchemaType {
     maxValue: Decimal | string | number,
     errorMessage?: string,
   ): DecimalSchemaType {
-    return this.greaterThanOrEqual(minValue).lessThanOrEqual(
-      maxValue,
+    const errorMsg =
       errorMessage ||
-        `Giá trị phải trong khoảng từ ${formatValueForMessage(minValue)} đến ${formatValueForMessage(maxValue)}`,
-    );
+      `Giá trị phải trong khoảng từ ${formatValueForMessage(minValue)} đến ${formatValueForMessage(maxValue)}`;
+    return this.greaterThanOrEqual(minValue, errorMsg).lessThanOrEqual(maxValue, errorMsg);
   };
 
   return decimalSchema;

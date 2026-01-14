@@ -1,6 +1,7 @@
 import { Input } from 'antd';
 import { NumericFormat } from 'react-number-format';
 import React from 'react';
+import { useCurrencySeparators } from '@/hooks/useAppConfig';
 
 type InputPriceProps = {
   value?: string;
@@ -14,10 +15,26 @@ type InputPriceProps = {
    * Maximum number of integer digits (excluding sign). Defaults to 18.
    */
   maxIntegerDigits?: number;
+  /**
+   * Whether to allow negative values. Defaults to true.
+   */
+  allowNegative?: boolean;
 };
 
 const InputPriceField = React.forwardRef<HTMLInputElement, InputPriceProps>(
-  ({ value = '', onChange = () => {}, name, decimalScale, maxIntegerDigits = 18 }, ref) => {
+  (
+    {
+      value = '',
+      onChange = () => {},
+      name,
+      decimalScale,
+      maxIntegerDigits = 18,
+      allowNegative = true,
+    },
+    ref,
+  ) => {
+    const currency = useCurrencySeparators();
+
     return (
       <NumericFormat
         data-testid={'input-price-field'}
@@ -25,10 +42,10 @@ const InputPriceField = React.forwardRef<HTMLInputElement, InputPriceProps>(
         placeholder="Enter price"
         value={value}
         inputMode="decimal"
-        thousandSeparator="."
-        decimalSeparator=","
-        decimalScale={decimalScale}
-        allowNegative={true}
+        thousandSeparator={currency.thousandSeparator}
+        decimalSeparator={currency.decimalSeparator}
+        decimalScale={currency.useThousandSeparator ? decimalScale : 0}
+        allowNegative={allowNegative}
         isAllowed={(vals) => {
           const raw = vals?.value ?? '';
           // split integer and decimal by dot or comma

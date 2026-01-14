@@ -5,14 +5,24 @@ import { LoadingFallback } from '@/components/Loading';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import router from '@/routes';
 import '@styles/index.css';
+import { AppConfigProvider } from './contexts/AppConfigProvider';
 
 function App() {
   return (
-    <ErrorBoundary>
-      <Suspense fallback={<LoadingFallback message="Loading application..." />}>
-        <RouterProvider router={router} />
-      </Suspense>
-    </ErrorBoundary>
+    <AppConfigProvider
+      config={{
+        currency: {
+          useThousandSeparator: true,
+          separatorCharacter: ',',
+        },
+      }}
+    >
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingFallback message="Loading application..." />}>
+          <RouterProvider router={router} />
+        </Suspense>
+      </ErrorBoundary>
+    </AppConfigProvider>
   );
 }
 

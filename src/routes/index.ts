@@ -7,6 +7,7 @@ const Page1 = lazy(() => import('@pages/Page1'));
 const Page2 = lazy(() => import('@pages/Page2'));
 const Page3 = lazy(() => import('@pages/Page3'));
 const Page4 = lazy(() => import('@/pages/Page4'));
+const Page5 = lazy(() => import('@/pages/Page5'));
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,11 @@ const router = createBrowserRouter([
       {
         path: '/page4',
         Component: Page4,
+        ErrorBoundary: RouteErrorBoundary,
+      },
+      {
+        path: '/page5',
+        Component: Page5,
         ErrorBoundary: RouteErrorBoundary,
       },
     ],

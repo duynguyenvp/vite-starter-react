@@ -31,6 +31,9 @@ const Layout = () => {
             <Link to="/page4" className={navLinkClass('/page4')}>
               Page 4
             </Link>
+            <Link to="/page5" className={navLinkClass('/page5')}>
+              Page 5
+            </Link>
           </div>
         </nav>
       </header>

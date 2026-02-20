@@ -6,7 +6,7 @@ import { RouteErrorBoundary } from './RouteError';
 const Page1 = lazy(() => import('@pages/Page1'));
 const Page2 = lazy(() => import('@pages/Page2'));
 const Page3 = lazy(() => import('@pages/Page3'));
-const Page4 = lazy(() => import('@pages/Page4'));
+const Page4 = lazy(() => import('@/pages/Page4'));
 
 const router = createBrowserRouter([
   {

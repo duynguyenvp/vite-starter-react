@@ -2,7 +2,7 @@ import { useRef, useCallback } from 'react';
 import { useReactTable, getCoreRowModel, flexRender, type RowData } from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import type { TableProps } from './types';
-import { getStickyStyle } from './utils';
+import { buildHeaderRowSpanMap, getStickyStyle } from './utils';
 
 export default function TanstackVirtualizedTable<TData extends RowData>({
   data,
@@ -49,6 +49,8 @@ export default function TanstackVirtualizedTable<TData extends RowData>({
     [fetchNextPage, hasNextPage, isFetchingNextPage],
   );
 
+  const headerSpanMap = buildHeaderRowSpanMap(headerGroups);
+
   return (
     <div className="flex flex-col w-full p-4">
       <div
@@ -73,9 +75,13 @@ export default function TanstackVirtualizedTable<TData extends RowData>({
               {headerGroups.flatMap((headerGroup) => (
                 <>
                   {headerGroup.headers.map((header) => {
-                    const isLeaf = header.subHeaders.length === 0;
-                    const totalGroups = headerGroups.length;
-                    const rowSpan = isLeaf ? totalGroups - header.depth : 1;
+                    const spanInfo = headerSpanMap.get(header.column.id);
+
+                    // Skip mọi header không phải top header
+                    if (spanInfo?.topHeaderId !== header.id) return null;
+
+                    const rowSpan = spanInfo?.rowSpan ?? 1;
+
                     const stickyStyle = getStickyStyle(header.column, leafColumns, header.index);
 
                     return (
@@ -86,14 +92,11 @@ export default function TanstackVirtualizedTable<TData extends RowData>({
                         ${Object.keys(stickyStyle).length > 0 ? 'z-40 bg-slate-200' : ''}
                       `}
                         style={{
-                          gridColumn: `span ${header.colSpan}`,
-                          gridRow: `span ${rowSpan}`,
+                          gridArea: `span ${rowSpan} / span ${header.colSpan}`,
                           ...(stickyStyle as React.CSSProperties),
                         }}
                       >
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(header.column.columnDef.header, header.getContext())}
+                        {flexRender(header.column.columnDef.header, header.getContext())}
                       </div>
                     );
                   })}
